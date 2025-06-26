@@ -1,5 +1,5 @@
 import streamlit as st
-import openai
+#import openai
 import pdfplumber
 import pandas as pd
 import json
@@ -32,10 +32,13 @@ def extract_text(file):
 #from openai import OpenAI
 
 # Create a client instance with Streamlit secrets
-client = openai.OpenAI(
+from openai import OpenAI
+
+client = OpenAI(
     api_key=st.secrets["OPENROUTER_API_KEY"],
     base_url=st.secrets["OPENROUTER_API_BASE"]
 )
+
 
 # === Query LLM and parse JSON ===
 def parse_resume(text):
