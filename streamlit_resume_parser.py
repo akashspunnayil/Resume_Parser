@@ -12,8 +12,9 @@ load_dotenv()
 
 
 # === CONFIGURE API ===
-openai.api_key = os.getenv("OPENROUTER_API_KEY")
-openai.api_base = os.getenv("OPENROUTER_API_BASE", "https://openrouter.ai/api/v1")
+
+openai.api_key = st.secrets["OPENROUTER_API_KEY"]
+openai.api_base = st.secrets["OPENROUTER_API_BASE"]
 
 
 # === Desired Skills ===
