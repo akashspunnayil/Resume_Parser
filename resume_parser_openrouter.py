@@ -5,6 +5,8 @@ import sys
 import os
 import re
 from datetime import datetime
+from dotenv import load_dotenv
+load_dotenv()
 
 # === Extract text from PDF ===
 def extract_text(pdf_path):
@@ -12,8 +14,8 @@ def extract_text(pdf_path):
         return "\n".join(p.extract_text() or '' for p in pdf.pages)
 
 # Set OpenRouter API endpoint and key
-openai.api_key = "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"
-openai.api_base = "https://openrouter.ai/api/v1"
+openai.api_key = os.getenv("OPENROUTER_API_KEY")
+openai.api_base = os.getenv("OPENROUTER_API_BASE", "https://openrouter.ai/api/v1")
 
 # === Desired Skills List ===
 desired_skills = [
