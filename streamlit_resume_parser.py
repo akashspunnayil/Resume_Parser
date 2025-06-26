@@ -57,6 +57,12 @@ Resume:
         return {"error": str(e)}
 
 
+# === Desired Skills ===
+desired_skills = [
+    "Python", "Machine Learning", "Streamlit", "Data Analysis", "Deep Learning",
+    "Shell scripting", "FORTRAN", "HPC", "Oceanography", "Climate Science"
+]
+
 # === Match desired skills ===
 def match_skills(skills):
     return [skill for skill in desired_skills if any(skill.lower() in s.lower() for s in skills)]
