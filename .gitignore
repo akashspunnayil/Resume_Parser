@@ -3,3 +3,4 @@ readme.txt
 openrouterai.txt
 .env
 resume.pdf
+.streamlit/secrets.toml
