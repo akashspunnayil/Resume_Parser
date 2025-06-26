@@ -1,5 +1,5 @@
 import streamlit as st
-import openai
+#import openai
 import pdfplumber
 import pandas as pd
 import json
@@ -13,8 +13,8 @@ import os
 
 # === CONFIGURE API ===
 
-openai.api_key = st.secrets["OPENROUTER_API_KEY"]
-openai.api_base = st.secrets["OPENROUTER_API_BASE"]
+#openai.api_key = st.secrets["OPENROUTER_API_KEY"]
+#openai.api_base = st.secrets["OPENROUTER_API_BASE"]
 
 
 # === Desired Skills ===
@@ -27,6 +27,15 @@ desired_skills = [
 def extract_text(file):
     with pdfplumber.open(file) as pdf:
         return "\n".join(p.extract_text() or '' for p in pdf.pages)
+
+# === Query LLM and parse JSON ===
+from openai import OpenAI
+
+# Create a client instance with Streamlit secrets
+client = OpenAI(
+    api_key=st.secrets["OPENROUTER_API_KEY"],
+    base_url=st.secrets["OPENROUTER_API_BASE"]
+)
 
 # === Query LLM and parse JSON ===
 def parse_resume(text):
@@ -47,7 +56,7 @@ Resume:
 Only return valid JSON.
 """
     try:
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="mistralai/mistral-nemo",
             messages=[{"role": "user", "content": prompt}],
         )
@@ -57,6 +66,7 @@ Only return valid JSON.
             return json.loads(match.group(0))
     except Exception as e:
         return {"error": str(e), "raw": reply if 'reply' in locals() else "No reply"}
+
 
 # === Match desired skills ===
 def match_skills(skills):
