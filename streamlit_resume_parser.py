@@ -7,8 +7,8 @@ import re
 from io import BytesIO
 import os
 
-from dotenv import load_dotenv
-load_dotenv()
+#from dotenv import load_dotenv
+#load_dotenv()
 
 
 # === CONFIGURE API ===
