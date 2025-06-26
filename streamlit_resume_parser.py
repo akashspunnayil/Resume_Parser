@@ -13,18 +13,39 @@ import re
 
 # === CONFIGURE API ===
 
-import streamlit as st
-from openai import OpenAI
-import pdfplumber
-import pandas as pd
-import json
-import re
 
-# Create OpenAI client using Streamlit secrets
-client = OpenAI(
-    api_key=st.secrets["OPENROUTER_API_KEY"],
-    base_url=st.secrets["OPENROUTER_API_BASE"]
-)
+from openai import OpenAI
+
+
+# # Create OpenAI client using Streamlit secrets
+# client = OpenAI(
+#     api_key=st.secrets["OPENROUTER_API_KEY"],
+#     base_url=st.secrets["OPENROUTER_API_BASE"]
+# )
+st.sidebar.subheader("🔐 API Key Configuration")
+
+api_mode = st.sidebar.radio("Choose API Key Mode", ["Use Streamlit Secrets", "Manually Enter API Key"])
+
+if api_mode == "Manually Enter API Key":
+    api_key_input = st.sidebar.text_input("Enter OpenRouter API Key", type="password")
+    api_base_input = st.sidebar.text_input("Enter API Base URL", value="https://openrouter.ai/api/v1")
+
+    if not api_key_input:
+        st.warning("⚠️ Please enter your API key.")
+        st.stop()
+
+    # Use manually entered key
+    client = OpenAI(
+        api_key=api_key_input,
+        base_url=api_base_input
+    )
+else:
+    # Use Streamlit secrets
+    client = OpenAI(
+        api_key=st.secrets["OPENROUTER_API_KEY"],
+        base_url=st.secrets["OPENROUTER_API_BASE"]
+    )
+
 
 # Extract text from PDF
 def extract_text(file):
