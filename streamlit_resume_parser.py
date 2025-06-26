@@ -4,8 +4,8 @@ import pdfplumber
 import pandas as pd
 import json
 import re
-from io import BytesIO
-import os
+#from io import BytesIO
+#import os
 
 #from dotenv import load_dotenv
 #load_dotenv()
@@ -29,15 +29,14 @@ def extract_text(file):
         return "\n".join(p.extract_text() or '' for p in pdf.pages)
 
 # === Query LLM and parse JSON ===
-#from openai import OpenAI
-
-# Create a client instance with Streamlit secrets
 from openai import OpenAI
 
+# Create a client instance with Streamlit secrets
 client = OpenAI(
     api_key=st.secrets["OPENROUTER_API_KEY"],
     base_url=st.secrets["OPENROUTER_API_BASE"]
 )
+
 
 
 # === Query LLM and parse JSON ===
@@ -63,6 +62,8 @@ Only return valid JSON.
             model="mistralai/mistral-nemo",
             messages=[{"role": "user", "content": prompt}],
         )
+        
+
         reply = response.choices[0].message.content.strip()
         match = re.search(r"\{.*\}", reply, re.DOTALL)
         if match:
