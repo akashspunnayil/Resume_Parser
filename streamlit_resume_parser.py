@@ -22,8 +22,8 @@ import re
 
 # Create OpenAI client using Streamlit secrets
 client = OpenAI(
-    api_key=st.secrets["OPENROUTER_API_KEY"],
-    base_url=st.secrets["OPENROUTER_API_BASE"]
+    api_key=st.secrets["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"],
+    base_url=st.secrets["https://openrouter.ai/api/v1"]
 )
 
 # Extract text from PDF
