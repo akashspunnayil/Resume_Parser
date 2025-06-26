@@ -1,4 +1,5 @@
-import openai
+# import openai
+from openai import OpenAI
 import pdfplumber
 import json
 import sys
@@ -14,8 +15,10 @@ def extract_text(pdf_path):
         return "\n".join(p.extract_text() or '' for p in pdf.pages)
 
 # Set OpenRouter API endpoint and key
-openai.api_key = os.getenv("OPENROUTER_API_KEY")
-openai.api_base = os.getenv("OPENROUTER_API_BASE", "https://openrouter.ai/api/v1")
+
+# Set API key and base
+# openai.api_key = os.getenv("OPENROUTER_API_KEY")
+# openai.api_base = os.getenv("OPENROUTER_API_BASE", "https://openrouter.ai/api/v1")
 
 # === Desired Skills List ===
 desired_skills = [
@@ -42,10 +45,18 @@ Resume:
 Only return valid JSON.
 """
 
-    response = openai.ChatCompletion.create(
-        model='mistralai/mistral-nemo',
+    client = OpenAI(
+        api_key=os.getenv("OPENROUTER_API_KEY"),
+        base_url=os.getenv("OPENROUTER_API_BASE", "https://openrouter.ai/api/v1")
+    )
+
+    
+    response = client.chat.completions.create(
+        model="mistralai/mistral-nemo",
         messages=[{"role": "user", "content": prompt}],
     )
+    reply = response.choices[0].message.content.strip()
+
 
     reply = response.choices[0].message.content.strip()
 
