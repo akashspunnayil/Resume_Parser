@@ -13,33 +13,25 @@ import re
 
 # === CONFIGURE API ===
 
-#openai.api_key = st.secrets["OPENROUTER_API_KEY"]
-#openai.api_base = st.secrets["OPENROUTER_API_BASE"]
-
-
-# === Desired Skills ===
-desired_skills = [
-    "Python", "Machine Learning", "Streamlit", "Data Analysis", "Deep Learning",
-    "Shell scripting", "FORTRAN", "HPC", "Oceanography", "Climate Science"
-]
-
-# === Extract text from PDF ===
-def extract_text(file):
-    with pdfplumber.open(file) as pdf:
-        return "\n".join(p.extract_text() or '' for p in pdf.pages)
-
-# === Query LLM and parse JSON ===
+import streamlit as st
 from openai import OpenAI
+import pdfplumber
+import pandas as pd
+import json
+import re
 
-# Create a client instance with Streamlit secrets
+# Create OpenAI client using Streamlit secrets
 client = OpenAI(
     api_key=st.secrets["OPENROUTER_API_KEY"],
     base_url=st.secrets["OPENROUTER_API_BASE"]
 )
 
+# Extract text from PDF
+def extract_text(file):
+    with pdfplumber.open(file) as pdf:
+        return "\n".join(p.extract_text() or '' for p in pdf.pages)
 
-
-# === Query LLM and parse JSON ===
+# Call LLM and extract JSON
 def parse_resume(text):
     prompt = f"""
 You are a professional resume parser.
@@ -47,29 +39,22 @@ You are a professional resume parser.
 From the resume text below, extract the following fields in JSON format with these exact keys:
 ["name", "email", "phone", "address", "skills", "education", "experience", "certifications", "links", "total_experience_years"]
 
-- "skills", "education", "experience", and "certifications" should be lists of strings.
-- "total_experience_years" should be a float.
+Return a valid JSON only.
 
 Resume:
 \"\"\"
 {text[:3000]}
 \"\"\"
-
-Only return valid JSON.
 """
     try:
         response = client.chat.completions.create(
             model="mistralai/mistral-nemo",
-            messages=[{"role": "user", "content": prompt}],
+            messages=[{"role": "user", "content": prompt}]
         )
-        
-
         reply = response.choices[0].message.content.strip()
-        match = re.search(r"\{.*\}", reply, re.DOTALL)
-        if match:
-            return json.loads(match.group(0))
+        return json.loads(re.search(r"\{.*\}", reply, re.DOTALL).group(0))
     except Exception as e:
-        return {"error": str(e), "raw": reply if 'reply' in locals() else "No reply"}
+        return {"error": str(e)}
 
 
 # === Match desired skills ===
