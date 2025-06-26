@@ -1,5 +1,7 @@
 # 📄 Resume Parser (Streamlit + LLM)
 
+[View App](https://a-resume-parser.streamlit.app/)
+
 A Streamlit web app that uses an LLM (via OpenRouter API) to extract structured information from multiple PDF resumes. The app displays a table where each row represents a resume, and columns include personal details, reported and matched skills, certifications, and estimated years of experience.
 
 ---
