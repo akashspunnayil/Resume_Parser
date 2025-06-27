@@ -90,8 +90,7 @@ Extraction Guidelines:
 - **certifications**: Include any NET/JRF, and any other qualifications/certifications mentioned in text.
 - **experience**: Include each role's title, organization, and full duration exactly as written. If any role includes a time period (e.g., "03/2023 – Present" or "May 2022 - Oct 2022" etc), make sure it is listed and considered.
 - **total_experience_years**: 
-    - Calculate the total experience in years by summing durations from all valid date ranges found in the experience section.
-    - Only calculate durations based on **explicit** start and end dates (e.g., "03/2023 – Present", "May 2022 – Oct 2022"). Do not estimate from vague text.
+    - Calculate the total experience in years by summing durations from all date ranges found in the experience section. 
     - Include internships, research projects, dissertations, part-time work, or full-time roles **if they mention a time range**.
     - Treat any of these terms as ongoing: "Present", "Ongoing", "Currently working", "Pursuing", "Till date", etc.
     - Always treat ongoing roles as continuing up to today's month and year.
@@ -105,7 +104,7 @@ Resume:
 \"\"\"
 """
 
-    
+# - Only calculate durations based on **explicit** start and end dates (e.g., "03/2023 – Present", "May 2022 – Oct 2022"). Do not estimate from vague text.    
 # - **total_experience_years**: Estimate the total professional experience by summing up job durations, even if the total is not explicitly stated. Return as float (because if months included included in experiences listed).
 
     try:
