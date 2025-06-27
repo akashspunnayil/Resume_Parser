@@ -88,13 +88,13 @@ Extraction Guidelines:
 - **skills**: Extract all actual tools, software, programming languages, etc., listed under any skill-related headings or subheadings (e.g., "Software Skills", "Technical Skills"). Do **not** include section headers as skills.
 - **education**: Extract **exactly as written** in the resume, preserving full degree names, institution names, marks/scores/cgpa/opgpa/grades and year ranges. Do not abbreviate or summarize. If bullet points or multiple entries exist, return them all as a list.
 - **certifications**: Include any NET/JRF, and any other qualifications/certifications mentioned in text.
-- **experience**: Include each role's title, organization, and full duration exactly as written. If any role includes a time period (e.g., "03/2023 – Present" or "May 2022 - Oct 2022"), make sure it is listed and considered.
+- **experience**: Include each role's title, organization, and full duration exactly as written. If any role includes a time period (e.g., "03/2023 – Present" or "May 2022 - Oct 2022" etc), make sure it is listed and considered.
 - **total_experience_years**: 
     - Calculate the total experience in years by summing durations from all valid date ranges found in the experience section.
     - Include internships, research projects, dissertations, part-time work, or full-time roles **if they mention a time range**.
     - Treat any of these terms as ongoing: "Present", "Ongoing", "Currently working", "Pursuing", "Till date", etc.
-    - Always treat ongoing roles as continuing up to **June 2025**.
-    - Round the total experience to 2 decimal places (e.g., 2.75).
+    - Always treat ongoing roles as continuing up to today's month and year.
+    - Return the number as float and Round to next higher (use 0.5 threshold).
 
 Return only a valid JSON object with no additional explanation.
 
