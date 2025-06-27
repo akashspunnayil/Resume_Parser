@@ -13,7 +13,6 @@ import re
 
 # === CONFIGURE API ===
 
-
 from openai import OpenAI
 
 
