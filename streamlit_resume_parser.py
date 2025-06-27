@@ -62,6 +62,16 @@ def extract_text(file):
     with pdfplumber.open(file) as pdf:
         return "\n".join(p.extract_text() or '' for p in pdf.pages)
 
+def safe_format_list(field):
+    val = parsed.get(field)
+    if isinstance(val, list):
+        return "; ".join(val)
+    elif isinstance(val, str):
+        return val
+    else:
+        return ""
+
+
 # Call LLM and extract JSON
 def parse_resume(text):
 #     prompt = f"""
@@ -165,11 +175,13 @@ if uploaded_files:
                 "Phone": parsed.get("phone"),
                 "Address": parsed.get("address"),
                 # "Education":parsed.get("education"),
-                "Education": "; ".join(parsed.get("education", [])) if isinstance(parsed.get("education"), list) else parsed.get("education"),
+                # "Education": "; ".join(parsed.get("education", [])) if isinstance(parsed.get("education"), list) else parsed.get("education"),
+                "Education": safe_format_list("education"),
                 "Other Reported Skills": ", ".join(unmatched_skills),
                 "Matched Skills": ", ".join(matched_skills),
                 # "Experience":parsed.get("experience"),
-                "Experience": "; ".join(parsed.get("experience", [])) if isinstance(parsed.get("experience"), list) else parsed.get("experience"),
+                # "Experience": "; ".join(parsed.get("experience", [])) if isinstance(parsed.get("experience"), list) else parsed.get("experience"),
+                "Experience": safe_format_list("experience"),
                 "Experience (Years)": parsed.get("total_experience_years"),
                 "Certifications": "; ".join(parsed.get("certifications", [])),
                 "Links": "; ".join(parsed.get("links", []))
