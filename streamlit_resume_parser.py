@@ -89,7 +89,12 @@ Extraction Guidelines:
 - **education**: Extract **exactly as written** in the resume, preserving full degree names, institution names, marks/scores/cgpa/opgpa/grades and year ranges. Do not abbreviate or summarize. If bullet points or multiple entries exist, return them all as a list.
 - **certifications**: Include any NET/JRF, and any other qualifications/certifications mentioned in text.
 - **experience**: Include each role's title, organization, and full duration as mentioned. Ensure all relevant entries are captured.
-- **total_experience_years**: Estimate the total professional experience by summing up job durations, even if the total is not explicitly stated. Return as float (because if months included included in experiences listed).
+- **total_experience_years**: Estimate the total experience by summing all job durations listed under the experience section.
+  - Include internships, projects, dissertations, and part-time roles if they mention a timeframe.
+  - Treat terms like "Present", "Ongoing", "Currently working", "Pursuing", or "Till date" as **June 2025**.
+  - If no end date is given but the role is implied to be ongoing, also treat it as ending in June 2025.
+  - Round the final total to two decimal places (e.g., 2.75).
+
 
 Return only a valid JSON object.
 
@@ -98,7 +103,7 @@ Resume:
 {text[:4000]}
 \"\"\"
 """
-
+# - **total_experience_years**: Estimate the total professional experience by summing up job durations, even if the total is not explicitly stated. Return as float (because if months included included in experiences listed).
 
     try:
         response = client.chat.completions.create(
@@ -157,7 +162,7 @@ if uploaded_files:
                 "Phone": parsed.get("phone"),
                 "Address": parsed.get("address"),
                 "Education":parsed.get("education"),
-                "Other Reported Skills": ", ".join(reported_skills),
+                "Other Reported Skills": ", ".join(unmatched_skills),
                 "Matched Skills": ", ".join(matched_skills),
                 "Experience (Years)": parsed.get("total_experience_years"),
                 "Certifications": "; ".join(parsed.get("certifications", [])),
