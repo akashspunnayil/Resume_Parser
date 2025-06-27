@@ -86,9 +86,10 @@ From the resume text below, extract the following fields in JSON format using th
 
 Extraction Guidelines:
 - **skills**: Extract all actual tools, software, programming languages, etc., listed under any skill-related headings or subheadings (e.g., "Software Skills", "Technical Skills"). Do **not** include section headers as skills.
-- **education**: Extract **exactly as written** in the resume, preserving full degree names, institution names, and year ranges. Do not abbreviate or summarize. If bullet points or multiple entries exist, return them all as a list.
+- **education**: Extract **exactly as written** in the resume, preserving full degree names, institution names, marks/scores/cgpa/opgpa/grades and year ranges. Do not abbreviate or summarize. If bullet points or multiple entries exist, return them all as a list.
+- **certifications**: Include any NET/JRF, and any other qualifications/certifications mentioned in text.
 - **experience**: Include each role's title, organization, and full duration as mentioned. Ensure all relevant entries are captured.
-- **total_experience_years**: Estimate the total professional experience by summing up job durations, even if the total is not explicitly stated.
+- **total_experience_years**: Estimate the total professional experience by summing up job durations, even if the total is not explicitly stated. Return as float (because if months included included in experiences listed).
 
 Return only a valid JSON object.
 
@@ -117,8 +118,13 @@ desired_skills = [
 ]
 
 # === Match desired skills ===
+# def match_skills(skills):
+#     return [skill for skill in desired_skills if any(skill.lower() in s.lower() for s in skills)]
+
 def match_skills(skills):
-    return [skill for skill in desired_skills if any(skill.lower() in s.lower() for s in skills)]
+    matched = [skill for skill in desired_skills if any(skill.lower() in s.lower() for s in skills)]
+    unmatched = [s for s in skills if not any(ds.lower() in s.lower() for ds in desired_skills)]
+    return matched, unmatched
 
 # === Streamlit App ===
 st.set_page_config(page_title="Resume Parser", layout="wide")
@@ -137,8 +143,12 @@ if uploaded_files:
                 st.error(f"{file.name}: {parsed['error']}")
                 continue
 
+            # reported_skills = parsed.get("skills", [])
+            # matched_skills = match_skills(reported_skills)
+
             reported_skills = parsed.get("skills", [])
-            matched_skills = match_skills(reported_skills)
+            matched_skills, unmatched_skills = match_skills(reported_skills)
+
             
             data.append({
                 "File": file.name,
@@ -146,7 +156,8 @@ if uploaded_files:
                 "Email": parsed.get("email"),
                 "Phone": parsed.get("phone"),
                 "Address": parsed.get("address"),
-                "Reported Skills": ", ".join(reported_skills),
+                "Education":parsed.get("education"),
+                "Other Reported Skills": ", ".join(reported_skills),
                 "Matched Skills": ", ".join(matched_skills),
                 "Experience (Years)": parsed.get("total_experience_years"),
                 "Certifications": "; ".join(parsed.get("certifications", [])),
