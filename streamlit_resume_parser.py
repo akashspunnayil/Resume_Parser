@@ -78,7 +78,7 @@ def parse_resume(text):
 # \"\"\"
 # """
 
-prompt = f"""
+    prompt = f"""
 You are a professional resume parser.
 
 From the resume text below, extract the following fields in JSON format using these exact keys:
