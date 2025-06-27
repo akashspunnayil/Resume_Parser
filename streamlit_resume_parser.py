@@ -63,7 +63,7 @@ def extract_text(file):
         return "\n".join(p.extract_text() or '' for p in pdf.pages)
 
 # Call LLM and extract JSON
-# def parse_resume(text):
+def parse_resume(text):
 #     prompt = f"""
 # You are a professional resume parser.
 
