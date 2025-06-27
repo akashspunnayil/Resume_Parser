@@ -26,7 +26,7 @@ st.sidebar.subheader("🔐 API Key Configuration")
 st.sidebar.markdown(
     """
     <div style='font-size: 0.85em; line-height: 1.4'>
-        This app uses a Language Model (LLM) to extract structured information from resumes.<br><br>
+        This app uses a Large Language Model (LLM) to extract structured information from resumes.<br><br>
         To use the LLM service (e.g., OpenRouter), an API key is required for secure access.<br><br>
         You can get a free API key by signing up at 
         <a href="https://openrouter.ai" target="_blank">openrouter.ai</a> and generating a key from your account dashboard.<br><br>
