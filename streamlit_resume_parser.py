@@ -28,8 +28,7 @@ st.sidebar.markdown(
         This app uses a Large Language Model (LLM) to extract structured information from resumes.<br><br>
         To use the LLM service (e.g., OpenRouter), an API key is required for secure access.<br><br>
         You can get a free API key by signing up at 
-        <a href="https://openrouter.ai" target="_blank">openrouter.ai</a> and generating a key from your account dashboard.<br><br>
-        
+        <a href="https://openrouter.ai" target="_blank">openrouter.ai</a> and generating a key from your account dashboard.<br><br>        
     </div>
     """,
     unsafe_allow_html=True
@@ -64,20 +63,42 @@ def extract_text(file):
         return "\n".join(p.extract_text() or '' for p in pdf.pages)
 
 # Call LLM and extract JSON
-def parse_resume(text):
-    prompt = f"""
+# def parse_resume(text):
+#     prompt = f"""
+# You are a professional resume parser.
+
+# From the resume text below, extract the following fields in JSON format with these exact keys:
+# ["name", "email", "phone", "address", "skills", "education", "experience", "certifications", "links", "total_experience_years"]
+
+# Return a valid JSON only.
+
+# Resume:
+# \"\"\"
+# {text[:3000]}
+# \"\"\"
+# """
+
+prompt = f"""
 You are a professional resume parser.
 
-From the resume text below, extract the following fields in JSON format with these exact keys:
+From the resume text below, extract the following fields in JSON format using these exact keys:
 ["name", "email", "phone", "address", "skills", "education", "experience", "certifications", "links", "total_experience_years"]
 
-Return a valid JSON only.
+Extraction Guidelines:
+- **skills**: Extract all actual tools, software, programming languages, etc., listed under any skill-related headings or subheadings (e.g., "Software Skills", "Technical Skills"). Do **not** include section headers as skills.
+- **education**: Extract **exactly as written** in the resume, preserving full degree names, institution names, and year ranges. Do not abbreviate or summarize. If bullet points or multiple entries exist, return them all as a list.
+- **experience**: Include each role's title, organization, and full duration as mentioned. Ensure all relevant entries are captured.
+- **total_experience_years**: Estimate the total professional experience by summing up job durations, even if the total is not explicitly stated.
+
+Return only a valid JSON object.
 
 Resume:
 \"\"\"
-{text[:3000]}
+{text[:4000]}
 \"\"\"
 """
+
+
     try:
         response = client.chat.completions.create(
             model="mistralai/mistral-nemo",
@@ -115,19 +136,6 @@ if uploaded_files:
             if "error" in parsed:
                 st.error(f"{file.name}: {parsed['error']}")
                 continue
-
-            # matched_skills = match_skills(parsed.get("skills", []))
-            # data.append({
-            #     "File": file.name,
-            #     "Name": parsed.get("name"),
-            #     "Email": parsed.get("email"),
-            #     "Phone": parsed.get("phone"),
-            #     "Address": parsed.get("address"),
-            #     "Matched Skills": ", ".join(matched_skills),
-            #     "Experience (Years)": parsed.get("total_experience_years"),
-            #     "Certifications": "; ".join(parsed.get("certifications", [])),
-            #     "Links": "; ".join(parsed.get("links", []))
-            # })
 
             reported_skills = parsed.get("skills", [])
             matched_skills = match_skills(reported_skills)
