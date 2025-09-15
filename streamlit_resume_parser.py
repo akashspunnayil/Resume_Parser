@@ -11,6 +11,10 @@ import re
 #load_dotenv()
 
 
+# === Streamlit App ===
+st.set_page_config(page_title="Resume Parser", layout="wide")
+
+
 # === CONFIGURE API ===
 
 from openai import OpenAI
@@ -57,10 +61,21 @@ else:
     )
 
 
-# Extract text from PDF
-def extract_text(file):
-    with pdfplumber.open(file) as pdf:
-        return "\n".join(p.extract_text() or '' for p in pdf.pages)
+## Extract text from PDF
+#def extract_text(file):
+#    with pdfplumber.open(file) as pdf:
+#        return "\n".join(p.extract_text() or '' for p in pdf.pages)
+
+
+from io import BytesIO
+
+def extract_text(uploaded_file):
+    # read bytes reliably and reset pointer
+    data = uploaded_file.read()
+    if not data:
+        return ""
+    with pdfplumber.open(BytesIO(data)) as pdf:
+        return "\n".join(p.extract_text() or "" for p in pdf.pages)
 
 def safe_format_list(field):
     val = parsed.get(field)
@@ -145,7 +160,7 @@ def match_skills(skills):
     return matched, unmatched
 
 # === Streamlit App ===
-st.set_page_config(page_title="Resume Parser", layout="wide")
+#st.set_page_config(page_title="Resume Parser", layout="wide")
 st.title("📄 Resume Parser - Details Extraction")
 
 uploaded_files = st.file_uploader("Upload one or more resumes (PDF)", type="pdf", accept_multiple_files=True)
