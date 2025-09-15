@@ -27,4 +27,6 @@ Set your [OpenRouter API key](https://openrouter.ai/) and base URL securely usin
 ```bash
 export OPENROUTER_API_KEY="sk-xxxxxxxxxxxxxxxxxx"
 export OPENROUTER_API_BASE="https://openrouter.ai/api/v1"
+```
 
+You can always choose your own openrouter model and api
